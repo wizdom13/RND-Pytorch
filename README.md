@@ -4,9 +4,7 @@
 This is a PyTorch implementation of [Exploration by Random Network Distillation](https://arxiv.org/abs/1810.12894) paper.
 
  
-#### Requirements
-
-------------
+## Requirements
 
 - [python3.6](http://www.python.org/)
 - [PyTorch](http://pytorch.org/)
@@ -17,7 +15,8 @@ This is a PyTorch implementation of [Exploration by Random Network Distillation]
 - [tensorboardX](https://github.com/lanpa/tensorboardX)
 
 
-#### Usage
+
+## Usage
 
 ------------
 
