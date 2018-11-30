@@ -1,0 +1,7 @@
+python3.6
+pytorch
+gym
+numpy
+PIL
+argparse
+tensorboardX
