@@ -16,9 +16,7 @@ This is a PyTorch implementation of [Exploration by Random Network Distillation]
 
 
 
-## Usage
-
-------------
+## Usage:
 
 ## Prepare
 ```

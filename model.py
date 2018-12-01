@@ -16,8 +16,7 @@ class NoisyLinear(nn.Module):
         self.out_features = out_features
         self.weight = nn.Parameter(torch.Tensor(out_features, in_features))
         self.bias = nn.Parameter(torch.Tensor(out_features))
-        self.noisy_weight = nn.Parameter(
-            torch.Tensor(out_features, in_features))
+        self.noisy_weight = nn.Parameter(torch.Tensor(out_features, in_features))
         self.noisy_bias = nn.Parameter(torch.Tensor(out_features))
         self.noise_std = sigma0 / math.sqrt(self.in_features)
 
@@ -35,8 +34,7 @@ class NoisyLinear(nn.Module):
     def sample_noise(self):
         self.in_noise.normal_(0, self.noise_std)
         self.out_noise.normal_(0, self.noise_std)
-        self.noise = torch.mm(
-            self.out_noise.view(-1, 1), self.in_noise.view(1, -1))
+        self.noise = torch.mm(self.out_noise.view(-1, 1), self.in_noise.view(1, -1))
 
     def reset_parameters(self):
         stdv = 1. / math.sqrt(self.weight.size(1))
@@ -76,38 +74,22 @@ class CnnActorCriticNetwork(nn.Module):
         super(CnnActorCriticNetwork, self).__init__()
 
         if use_noisy_net:
-            print('use NoisyNet')
+            print('Use NoisyNet')
             linear = NoisyLinear
         else:
             linear = nn.Linear
 
         self.feature = nn.Sequential(
-            nn.Conv2d(
-                in_channels=4,
-                out_channels=32,
-                kernel_size=8,
-                stride=4),
+            nn.Conv2d(4, 32, kernel_size=8, stride=4),
             nn.ReLU(),
-            nn.Conv2d(
-                in_channels=32,
-                out_channels=64,
-                kernel_size=4,
-                stride=2),
+            nn.Conv2d(32, 64, kernel_size=4, stride=2),
             nn.ReLU(),
-            nn.Conv2d(
-                in_channels=64,
-                out_channels=64,
-                kernel_size=4,
-                stride=1),
+            nn.Conv2d(64, 64, kernel_size=4, stride=1),
             nn.ReLU(),
             Flatten(),
-            linear(
-                2304,
-                256),
+            linear(2304, 256),
             nn.ReLU(),
-            linear(
-                256,
-                448),
+            linear(256, 448),
             nn.ReLU()
         )
 
@@ -125,14 +107,11 @@ class CnnActorCriticNetwork(nn.Module):
         self.critic_ext = linear(448, 1)
         self.critic_int = linear(448, 1)
 
-        for p in self.modules():
-            if isinstance(p, nn.Conv2d):
-                init.orthogonal_(p.weight, np.sqrt(2))
-                p.bias.data.zero_()
-
-            if isinstance(p, nn.Linear):
-                init.orthogonal_(p.weight, np.sqrt(2))
-                p.bias.data.zero_()
+        # Initialize weights
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
+                init.orthogonal_(m.weight, np.sqrt(2))
+                m.bias.data.zero_()
 
         init.orthogonal_(self.critic_ext.weight, 0.01)
         self.critic_ext.bias.data.zero_()
@@ -168,23 +147,11 @@ class RNDModel(nn.Module):
 
         feature_output = 7 * 7 * 64
         self.predictor = nn.Sequential(
-            nn.Conv2d(
-                in_channels=1,
-                out_channels=32,
-                kernel_size=8,
-                stride=4),
+            nn.Conv2d(1, 32, kernel_size=8, stride=4),
             nn.LeakyReLU(),
-            nn.Conv2d(
-                in_channels=32,
-                out_channels=64,
-                kernel_size=4,
-                stride=2),
+            nn.Conv2d(32, 64, kernel_size=4, stride=2),
             nn.LeakyReLU(),
-            nn.Conv2d(
-                in_channels=64,
-                out_channels=64,
-                kernel_size=3,
-                stride=1),
+            nn.Conv2d(64, 64, kernel_size=3, stride=1),
             nn.LeakyReLU(),
             Flatten(),
             nn.Linear(feature_output, 512),
@@ -195,37 +162,23 @@ class RNDModel(nn.Module):
         )
 
         self.target = nn.Sequential(
-            nn.Conv2d(
-                in_channels=1,
-                out_channels=32,
-                kernel_size=8,
-                stride=4),
+            nn.Conv2d(1, 32, kernel_size=8, stride=4),
             nn.LeakyReLU(),
-            nn.Conv2d(
-                in_channels=32,
-                out_channels=64,
-                kernel_size=4,
-                stride=2),
+            nn.Conv2d(32, 64, kernel_size=4, stride=2),
             nn.LeakyReLU(),
-            nn.Conv2d(
-                in_channels=64,
-                out_channels=64,
-                kernel_size=3,
-                stride=1),
+            nn.Conv2d(64, 64, kernel_size=3, stride=1),
             nn.LeakyReLU(),
             Flatten(),
             nn.Linear(feature_output, 512)
         )
 
-        for p in self.modules():
-            if isinstance(p, nn.Conv2d):
-                init.orthogonal_(p.weight, np.sqrt(2))
-                p.bias.data.zero_()
+        # Initialize weights    
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
+                init.orthogonal_(m.weight, np.sqrt(2))
+                m.bias.data.zero_()
 
-            if isinstance(p, nn.Linear):
-                init.orthogonal_(p.weight, np.sqrt(2))
-                p.bias.data.zero_()
-
+        # Set target parameters as untrainable
         for param in self.target.parameters():
             param.requires_grad = False
 

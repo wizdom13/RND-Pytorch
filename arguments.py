@@ -70,5 +70,6 @@ def get_args():
     args.sticky_action = not args.no_sticky_action
 
     print("GPU training: ", args.cuda)
+    print("Sticky actions: ", args.sticky_action)
 
     return args
