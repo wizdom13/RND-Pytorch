@@ -23,7 +23,7 @@ def get_action(model, device, state):
     action_dist = Categorical(action_probs)
     action = action_dist.sample()
 
-    return action.data.cpu().numpy().squeeze(), value_ext.data.cpu().numpy().squeeze(), value_int.data.cpu().numpy().squeeze(), action_probs.detach()
+    return action.data.cpu().numpy().squeeze(), value_ext.data.cpu().numpy().squeeze(), value_int.data.cpu().numpy().squeeze(), action_probs.detach().cpu()
 
 
 def compute_intrinsic_reward(rnd, device, next_obs):
