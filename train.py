@@ -11,7 +11,7 @@ from torch.multiprocessing import Pipe
 
 from model import CnnActorCriticNetwork, RNDModel
 from envs import *
-from utils import RunningMeanStd, RewardForwardFilter
+from utils import RunningMeanStd, RewardForwardFilter, global_grad_norm_
 from arguments import get_args
 
 from tensorboardX import SummaryWriter
@@ -122,7 +122,7 @@ def train_model(args, device, output_size, model, rnd, optimizer, s_batch, targe
             optimizer.zero_grad()
             loss = actor_loss + 0.5 * critic_loss - args.entropy_coef * entropy + forward_loss
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_grad_norm)
+            global_grad_norm_(list(self.model.parameters())+list(self.rnd.predictor.parameters()))
             optimizer.step()
 
 

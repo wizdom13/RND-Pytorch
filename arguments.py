@@ -41,8 +41,6 @@ def get_args():
                         help='entropy term coefficient (default: 2.)')    
     parser.add_argument('--int-coef', type=float, default=1.,
                         help='entropy term coefficient (default: 1.)')  
-    parser.add_argument('--max-grad-norm', type=float, default=0.5,
-                        help='Max norm of gradients (default: 0.5)')
     parser.add_argument('--max-episode-steps', type=int, default=18000,
                         help='Maximum steps per episode (default: 18000)')
     parser.add_argument('--pre-obs-norm-steps', type=int, default=50,
