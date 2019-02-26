@@ -9,7 +9,7 @@ def get_args():
                         help='Algorithm to use: rnd | ppo')
     parser.add_argument('--lr', type=float, default=1e-4,
                         help='Learning rate (default: 1e-4)')
-    parser.add_argument('--num-worker', type=int, default=16,
+    parser.add_argument('--num-worker', type=int, default=128,
                         help='Number of workers (CPU processes) to use (default: 16)')
     parser.add_argument('--num-step', type=int, default=128,
                         help='Number of forward steps (default: 128)')
@@ -41,7 +41,7 @@ def get_args():
                         help='entropy term coefficient (default: 2.)')    
     parser.add_argument('--int-coef', type=float, default=1.,
                         help='entropy term coefficient (default: 1.)')  
-    parser.add_argument('--max-episode-steps', type=int, default=18000,
+    parser.add_argument('--max-episode-steps', type=int, default=4500,
                         help='Maximum steps per episode (default: 18000)')
     parser.add_argument('--pre-obs-norm-steps', type=int, default=50,
                         help='Number of steps for pre-normalization (default: 50)')
